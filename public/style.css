@@ -107,19 +107,23 @@ video {
 .settings {
     position: fixed;
     bottom: 2rem;
-    right: 5rem;
+    right: 3rem;
     display: flex;
     flex-direction: column;
     align-items: end;
 }
 
 .settings:not(.is-open) .settings-btn:not(.open-settings-btn) {
-    display: none;
+    opacity: 0;
+    margin-bottom: -3rem;
+    z-index: -1;
 }
 
 .settings-btn {
     cursor: pointer;
     display: flex;
+    transition: all 0.3s ease-out;
+    opacity: 1;
 }
 
 .settings-btn .button-label {

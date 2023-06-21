@@ -20,10 +20,6 @@ function Animation() {
         }
     }
 
-    function isPlaying() {
-        return animationInterval !== null;
-    }
-
     return {
         toggleAnimations: toggleAnimations
     }
