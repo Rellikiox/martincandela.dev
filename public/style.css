@@ -41,7 +41,7 @@ section+section {
 
 .work h3 {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
 }
 
