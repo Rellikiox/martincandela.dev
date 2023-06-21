@@ -1,0 +1,195 @@
+:root {
+    --base-hue: 200;
+    --main-color: hsl(var(--base-hue) 80% 95% / 1);
+    --accent-color: hsl(var(--base-hue) 80% 55%);
+    --accent-color-transparent: hsl(var(--base-hue) 80% 55% / 0);
+    --background-color: hsl(var(--base-hue) 30% 10% / 1);
+}
+
+body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+
+    font-family: system-ui;
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+
+    background-color: var(--background-color) !important;
+    color: var(--main-color) !important;
+}
+
+main {
+    width: min(100ch, 100% - 4rem);
+    margin-inline: auto;
+}
+
+header {
+    padding-bottom: min(5rem, 5vw);
+}
+
+header h1 {
+    padding: min(5rem, 5vw);
+    padding-bottom: 0;
+    cursor: default;
+    margin-bottom: 3rem;
+    line-height: 2.75rem;
+}
+
+section+section {
+    margin-top: 5rem
+}
+
+.work h3 {
+    display: flex;
+    justify-content: space-between;
+}
+
+.work+.work {
+    margin-top: 2rem;
+}
+
+.colorize {
+    color: var(--accent-color) !important;
+}
+
+.faded {
+    opacity: 0.4;
+}
+
+.colorize-on-hover {
+    transition: all 0.3s;
+}
+
+.colorize-on-hover:hover {
+    color: var(--accent-color);
+}
+
+.underline-on-hover {
+    transition: all 0.3s;
+    text-decoration: underline 0.15rem var(--accent-color-transparent);
+}
+
+.underline-on-hover:hover {
+    text-decoration: underline 0.15rem var(--accent-color);
+}
+
+.separated {
+    margin-left: 1rem;
+}
+
+a,
+a:visited {
+    color: var(--main-color);
+}
+
+.skills ul {
+    text-align: center;
+    padding-left: 0;
+}
+
+.skills li {
+    display: inline;
+    margin: 0 1rem;
+}
+
+strong {
+    color: var(--accent-color);
+}
+
+img,
+svg,
+video {
+    max-width: 100%;
+    display: block;
+}
+
+
+.settings {
+    position: fixed;
+    bottom: 2rem;
+    right: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+.settings:not(.is-open) .settings-btn:not(.open-settings-btn) {
+    display: none;
+}
+
+.settings-btn {
+    cursor: pointer;
+    display: flex;
+}
+
+.settings-btn .button-label {
+    margin-right: 1rem;
+    opacity: 0;
+    transition: all 0.1s ease-out;
+}
+
+.settings-btn svg {
+    transition: all 0.3s ease-out;
+}
+
+.settings-btn svg path {
+    fill: var(--main-color);
+    transition: all 0.3s ease-out;
+}
+
+.settings-btn:hover .button-label,
+.is-open .button-label {
+    opacity: 1;
+}
+
+.is-open .open-settings-btn svg {
+    transform: rotate(180deg);
+}
+
+.is-open .open-settings-btn svg path,
+.settings-btn:hover svg path {
+    fill: var(--accent-color);
+}
+
+.settings-btn+.settings-btn {
+    margin-top: 1rem;
+}
+
+.toggle-animations-btn.is-playing .when-paused {
+    display: none;
+}
+
+.toggle-animations-btn:not(.is-playing) .when-playing {
+    display: none;
+}
+
+@media print {
+    :root {
+        --main-color: hsl(200 80% 95% / 1);
+        --accent-color: hsl(200 80% 55%);
+        --accent-color-transparent: hsl(200 80% 55% / 0);
+        --background-color: hsl(200 30% 10% / 1);
+    }
+
+    @page {
+        size: 11in 21in;
+    }
+
+    html {
+        margin: 2rem;
+    }
+
+    header {
+        padding-bottom: 2rem;
+    }
+
+
+    section+section {
+        margin-top: 2rem
+    }
+
+    .projects,
+    .settings {
+        display: none;
+    }
+}
