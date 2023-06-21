@@ -2,7 +2,7 @@
 function Animation() {
     let baseHue = 200;
     // One full Hue rotation every 60 seconds
-    let intervalTime = (6 / 360) * 1000;
+    let intervalTime = (60 / 360) * 1000;
     let animationInterval = null;
 
     function updateBaseHue() {
