@@ -19,7 +19,7 @@ body {
 }
 
 main {
-    width: min(100ch, 100% - 4rem);
+    width: min(100ch, 100% - 3rem);
     margin-inline: auto;
 }
 
@@ -41,11 +41,17 @@ section+section {
 
 .work h3 {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
+    align-items: center;
 }
 
 .work+.work {
     margin-top: 2rem;
+}
+
+.dates {
+    text-align: end;
+    margin-left: 1rem;
 }
 
 .colorize {
@@ -108,7 +114,7 @@ video {
     position: fixed;
     bottom: 2rem;
     right: 3rem;
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: end;
 }
