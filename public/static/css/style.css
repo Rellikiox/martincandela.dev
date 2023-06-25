@@ -114,7 +114,7 @@ video {
     position: fixed;
     bottom: 2rem;
     right: 3rem;
-    display: none;
+    display: flex;
     flex-direction: column;
     align-items: end;
 }
@@ -152,11 +152,11 @@ video {
     opacity: 1;
 }
 
-.is-open .open-settings-btn svg {
+.is-open>.open-settings-btn svg {
     transform: rotate(180deg);
 }
 
-.is-open .open-settings-btn svg path,
+.is-open>.open-settings-btn svg path,
 .settings-btn:hover svg path {
     fill: var(--accent-color);
 }
