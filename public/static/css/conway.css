@@ -1,0 +1,37 @@
+menu {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+}
+
+.menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: white;
+    border-radius: 25%;
+
+    cursor: pointer;
+
+    transition: all 0.1s ease-out;
+
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    -webkit-box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+}
+
+.menu-btn:hover {
+    box-shadow: 0px 0px 24px -1px rgba(255, 255, 255, 0.5);
+    -webkit-box-shadow: 0px 0px 24px -1px rgba(255, 255, 255, 0.5);
+}
+
+menu.is-playing .while-paused {
+    display: none;
+}
+
+menu:not(.is-playing) .while-playing {
+    display: none;
+}
