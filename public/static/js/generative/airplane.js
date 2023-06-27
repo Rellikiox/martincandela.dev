@@ -1,4 +1,11 @@
 
+/* A paper airplane endlessly flying on the screen
+
+TODO:
+- Fade individual line sections, not whole lines
+- Render plane in front of lines
+*/
+
 const liftForce = -0.005;
 const gravityForce = 98;
 const dragForce = 0.0001;
@@ -17,7 +24,7 @@ let timeSincePoint = 0;
 function setup() {
     createCanvas(windowWidth, windowHeight);
 
-    entities.push(createDebugPlane(createVector(20, 400), 0, createVector(100, 0)));
+    createPlane(createVector(20, 400), 0, createVector(100, 0));
 }
 
 function windowResized() {
@@ -31,110 +38,13 @@ function draw() {
 
     background('#E8E5CB');
 
-
-    stroke('#262623');
-    strokeWeight(3);
-    noFill();
-    lines.forEach(drawLine);
-
-    planes.forEach(updatePlane);
-    noStroke();
-    planes.forEach(drawPlane);
-
     entities.forEach((entity) => entity.update(entity));
+    entities = entities.filter(entity => !entity.isDead).sort((a, b) => a.zIndex - b.zIndex);
     entities.forEach((entity) => entity.draw(entity));
 }
 
-function mousePressed() {
-    planes[0].velocity.add(createVector(0, -100));
 
-    currentLine = [];
-    lines.push(currentLine);
-}
-
-function mouseReleased() {
-    // console.log(lines[lines.length - 1].length);
-}
-
-function mouseDragged() {
-    currentLine.push(createVector(mouseX, mouseY));
-}
-
-
-function updatePlane(plane) {
-    if (plane.grounded) {
-        return;
-    }
-    let deltaSeconds = deltaTime / 1000;
-
-    // Substract gravity
-    plane.velocity.y += gravity * deltaSeconds;
-
-    // Update position based on final velocty
-    plane.position.add(p5.Vector.mult(plane.velocity, deltaSeconds));
-
-    // If we're on the ground reset Y
-    if (plane.position.y > plane.startY) {
-        plane.velocity.y = 0;
-        // Apply ground drag
-        plane.velocity.x -= groundDrag * deltaSeconds;
-        if (plane.velocity.x <= 0) {
-            plane.grounded = true;
-        }
-    }
-
-    if (!plane.grounded) {
-        plane.lastHeading = plane.velocity.heading();
-    }
-
-    plane.trail.push(plane.position.copy());
-}
-
-
-function drawPlane(plane) {
-    if (plane.grounded) {
-        fill('#AA0000');
-    } else {
-        fill('#000000');
-    }
-    push();
-    translate(plane.position.x, plane.position.y);
-    rotate(plane.lastHeading);
-    triangle(0, -10, 35, 0, 0, 10);
-    pop();
-}
-
-function newPlane() {
-    plane = {
-        position: createVector(50, 500),
-        velocity: createVector(10, -150),
-        startY: 700,
-        trail: [],
-        grounded: false,
-        lastHeading: null
-    };
-    lines.push(plane.trail);
-    return plane;
-}
-
-function drawLine(points) {
-    push();
-    drawingContext.setLineDash([10, 50]);
-    stroke('#262623');
-    strokeWeight(3);
-    noFill();
-
-    beginShape();
-
-    points.forEach((point) => {
-        vertex(point.x, point.y);
-    });
-
-    endShape();
-    pop();
-}
-
-function createDebugPlane(position, rotation, velocity) {
+function createPlane(position, rotation, velocity) {
     let plane = {
         position: position,
         rotation: rotation,
@@ -142,30 +52,20 @@ function createDebugPlane(position, rotation, velocity) {
         dragForce: createVector(0, 0),
         liftForce: createVector(0, 0),
         gravityForce: createVector(0, 0),
-        trail: [],
+        trail: createLine(),
+        isDead: false,
+        zIndex: 10,
         draw: (plane) => {
             fill('#AA0000');
+            noStroke();
             push();
             translate(plane.position.x, plane.position.y);
             rotate(plane.rotation);
             triangle(0, -10, 35, 0, 0, 10);
 
             pop();
-            translate(plane.position.x, plane.position.y);
-
-            // drawingContext.setLineDash([]);
-            // stroke(0);
-            // line(0, 0, plane.liftForce.x, plane.liftForce.y);
-            // stroke(50);
-            // line(0, 0, plane.gravityForce.x, plane.gravityForce.y);
-            // stroke(200);
-            // line(0, 0, plane.gravityForce.x + plane.liftForce.x, plane.gravityForce.y + plane.liftForce.y);
-            // stroke(200, 200, 0);
-            // line(0, 0, plane.dragForce.x, plane.dragForce.y);
         },
         update: (plane) => {
-            // let angleToMouse = Math.atan2(mouseY - plane.position.y, mouseX - plane.position.y);
-
             let forward = p5.Vector.fromAngle(plane.rotation).normalize();
             let up = p5.Vector.rotate(forward, HALF_PI);
             let dot = p5.Vector.dot(forward, createVector(0, -1).normalize());
@@ -187,31 +87,63 @@ function createDebugPlane(position, rotation, velocity) {
             timeSincePoint += deltaTime / 1000;
             if (timeSincePoint >= pointFrequency) {
                 timeSincePoint = timeSincePoint % pointFrequency;
-                plane.trail.push(plane.position.copy());
+                plane.trail.points.push(plane.position.copy());
             }
 
             while (plane.position.x < 0) {
                 plane.position.x += windowWidth;
-                plane.trail = [];
-                lines.push(plane.trail);
+                plane.trail = createLine();
             }
             if (plane.position.x >= windowWidth) {
                 plane.position.x = plane.position.x % windowWidth;
-                plane.trail = [];
-                lines.push(plane.trail);
+                plane.trail = createLine();
             }
             while (plane.position.y < 0) {
                 plane.position.y += windowHeight;
-                plane.trail = [];
-                lines.push(plane.trail);
+                plane.trail = createLine();
             }
             if (plane.position.y >= windowHeight) {
                 plane.position.y = plane.position.y % windowHeight;
-                plane.trail = [];
-                lines.push(plane.trail);
+                plane.trail = createLine();
             }
         }
     }
-    lines.push(plane.trail);
+    entities.push(plane);
     return plane;
+}
+
+
+function createLine() {
+    let line = {
+        timestamp: elapsedTime,
+        alpha: 1,
+        points: [],
+        isDead: false,
+        zIndex: 5,
+        update: (line) => {
+            let timeAlive = elapsedTime - line.timestamp;
+            line.alpha = constrain(map(timeAlive, 0, 60, 255, 0), 0, 255);
+            if (line.alpha <= 0) {
+                line.isDead = true;
+            }
+        },
+        draw: (line) => {
+            push();
+            drawingContext.setLineDash([10, 50]);
+            stroke(38, 38, 35, line.alpha);
+            strokeWeight(3);
+            noFill();
+
+            beginShape();
+
+            line.points.forEach((point) => {
+                vertex(point.x, point.y);
+            });
+
+            endShape();
+            pop();
+        }
+    }
+    entities.push(line);
+    return line;
 }

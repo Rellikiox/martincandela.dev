@@ -1,27 +1,5 @@
-:root {
-    --base-hue: 200;
-    --main-color: hsl(var(--base-hue) 80% 95% / 1);
-    --accent-color: hsl(var(--base-hue) 80% 55%);
-    --accent-color-transparent: hsl(var(--base-hue) 80% 55% / 0);
-    --background-color: hsl(var(--base-hue) 30% 10% / 1);
-}
+@import url('/static/css/base.css');
 
-body {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-
-    font-family: system-ui;
-    font-size: 1.125rem;
-    line-height: 1.5rem;
-
-    background-color: var(--background-color) !important;
-    color: var(--main-color) !important;
-}
-
-main {
-    width: min(100ch, 100% - 3rem);
-    margin-inline: auto;
-}
 
 header {
     padding-bottom: min(5rem, 5vw);
@@ -54,13 +32,7 @@ section+section {
     margin-left: 1rem;
 }
 
-.colorize {
-    color: var(--accent-color) !important;
-}
 
-.faded {
-    opacity: 0.5;
-}
 
 .colorize-on-hover {
     transition: all 0.3s;
@@ -83,10 +55,7 @@ section+section {
     margin-left: 1rem;
 }
 
-a,
-a:visited {
-    color: var(--main-color);
-}
+
 
 .skills ul {
     text-align: center;
@@ -98,16 +67,7 @@ a:visited {
     margin: 0 1rem;
 }
 
-strong {
-    color: var(--accent-color);
-}
 
-img,
-svg,
-video {
-    max-width: 100%;
-    display: block;
-}
 
 
 .settings {
@@ -182,7 +142,7 @@ video {
     }
 
     @page {
-        size: 11in 22in;
+        size: 11in 23in;
     }
 
     html {
