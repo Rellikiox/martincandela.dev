@@ -7,12 +7,6 @@
       "**/node_modules/**"
     ],
     "cleanUrls": true,
-    "trailingSlash": false,
-    "rewrites": [
-      {
-        "source": "",
-        "destination": "/cv.html"
-      }
-    ]
+    "trailingSlash": false
   }
 }

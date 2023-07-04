@@ -49,9 +49,10 @@ function update(frameCount, frameDelta) {
 
 
 function createPlane(position, rotation, velocity) {
-    let shape = two.makePolygon(position.x, position.y, 10, 3);
+    let shape = two.makePolygon(position.x, position.y, 12, 3);
     shape.fill = 'rgb(35, 32, 33)';
     shape.noStroke();
+    shape.skewY = 0.4;
     foreground.add(shape);
 
     let plane = {
@@ -90,7 +91,7 @@ function createPlane(position, rotation, velocity) {
 
             plane.shape.position.x = plane.position.x;
             plane.shape.position.y = plane.position.y;
-            plane.shape.rotation = plane.rotation + Math.PI / 2;
+            plane.shape.rotation = plane.rotation - 0.8;
 
 
             if (plane.position.x < 0 || plane.position.x >= two.width || plane.position.y < 0 || plane.position.y >= two.height) {
@@ -118,7 +119,7 @@ function createLine(parent) {
         shape.dashes = [10, 50];
         shape.linewidth = 3;
         shape.noFill();
-        shape.cap = 'rounded';
+        shape.cap = 'round';
         shape.position = Two.Vector.zero;
         background.add(shape);
         return shape;
