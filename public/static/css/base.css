@@ -38,6 +38,24 @@ video {
     opacity: 0.5;
 }
 
+.colorize-on-hover {
+    transition: all 0.3s;
+}
+
+.colorize-on-hover:hover {
+    color: var(--accent-color);
+}
+
+.underline-on-hover {
+    transition: all 0.3s;
+    text-decoration: underline 0.15rem var(--accent-color-transparent);
+}
+
+.underline-on-hover:hover {
+    text-decoration: underline 0.15rem var(--accent-color);
+}
+
+
 a,
 a:visited {
     color: var(--main-color);

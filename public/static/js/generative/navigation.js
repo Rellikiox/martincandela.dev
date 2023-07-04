@@ -8,7 +8,7 @@ document.addEventListener('keydown', (event) => {
 });
 
 
-let pages = ['one', 'conway', 'airplane'];
+let pages = ['lines', 'airplane'];
 
 function goToPreviousPage() {
     let pathParts = location.pathname.split('/');

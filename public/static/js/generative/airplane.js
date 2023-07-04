@@ -10,140 +10,170 @@ const liftForce = -0.005;
 const gravityForce = 98;
 const dragForce = 0.0001;
 const groundDrag = 200;
+let two;
 let lines = [];
 let currentLine = {};
 let elapsedTime = 0;
 
-let planes = [];
+let plane;
+let trail;
 
-let entities = [];
-
-let pointFrequency = 0.05;
-let timeSincePoint = 0;
+let background;
+let foreground;
 
 function setup() {
-    createCanvas(windowWidth, windowHeight);
+    two = new Two({
+        type: Two.Types.svg,
+        fullscreen: true
+    }).appendTo(document.body);
 
-    createPlane(createVector(20, 400), 0, createVector(100, 0));
+    two.renderer.domElement.style.background = '#E8E5CB';
+
+    background = two.makeGroup();
+    foreground = two.makeGroup();
+
+    plane = createPlane(new Two.Vector(20, 400), 0, new Two.Vector(100, 0));
+    trail = createLine(plane);
+
+    two.bind('update', update);
+    two.play();
 }
 
-function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
 
-    drawingContext.setLineDash([10, 50]);
-}
+function update(frameCount, frameDelta) {
+    elapsedTime += frameDelta / 1000;
 
-function draw() {
-    elapsedTime += deltaTime / 1000;
-
-    background('#E8E5CB');
-
-    entities.forEach((entity) => entity.update(entity));
-    entities = entities.filter(entity => !entity.isDead).sort((a, b) => a.zIndex - b.zIndex);
-    entities.forEach((entity) => entity.draw(entity));
+    plane.update(plane, frameDelta);
+    trail.update(trail);
 }
 
 
 function createPlane(position, rotation, velocity) {
+    let shape = two.makePolygon(position.x, position.y, 10, 3);
+    shape.fill = 'rgb(35, 32, 33)';
+    shape.noStroke();
+    foreground.add(shape);
+
     let plane = {
         position: position,
         rotation: rotation,
         velocity: velocity,
-        dragForce: createVector(0, 0),
-        liftForce: createVector(0, 0),
-        gravityForce: createVector(0, 0),
-        trail: createLine(),
-        isDead: false,
-        zIndex: 10,
-        draw: (plane) => {
-            fill('#AA0000');
-            noStroke();
-            push();
-            translate(plane.position.x, plane.position.y);
-            rotate(plane.rotation);
-            triangle(0, -10, 35, 0, 0, 10);
+        dragForce: Two.Vector.zero,
+        liftForce: Two.Vector.zero,
+        gravityForce: Two.Vector.zero,
+        shape: shape,
+        teleported: false,
+        update: (plane, frameDelta) => {
+            // We were using fameDelta to have framerate independent physics, however when the tab is in the background
+            // And you tab back in the frameDelta will be several seconds, so the plane will shoot up into the sky, breaking
+            // much of the code.
+            let fakeFrameDelta = 16
 
-            pop();
-        },
-        update: (plane) => {
-            let forward = p5.Vector.fromAngle(plane.rotation).normalize();
-            let up = p5.Vector.rotate(forward, HALF_PI);
-            let dot = p5.Vector.dot(forward, createVector(0, -1).normalize());
-            let velocitySquared = Math.pow(plane.velocity.mag(), 2);
+            plane.teleported = false;
+            let forward = new Two.Vector(Math.cos(plane.rotation), Math.sin(plane.rotation));
+            let up = forward.clone().rotate(Math.PI / 2);
+            let dot = forward.dot(Two.Vector.up);
+            let velocitySquared = Math.pow(plane.velocity.length(), 2);
             let horizontalinity = (1 - Math.abs(dot));
-            plane.liftForce = p5.Vector.mult(up, (liftForce * horizontalinity * velocitySquared));
+            plane.liftForce = up.clone().multiply(liftForce * horizontalinity * velocitySquared);
 
-            plane.gravityForce = createVector(0, gravityForce);
+            plane.gravityForce = new Two.Vector(0, gravityForce);
 
-            plane.dragForce = p5.Vector.mult(p5.Vector.normalize(plane.velocity), - velocitySquared * dragForce);
+            plane.dragForce = plane.velocity.clone().setLength(- velocitySquared * dragForce);
 
-            let combinedForces = p5.Vector.add(plane.gravityForce, p5.Vector.add(plane.liftForce, plane.dragForce));
-            let frameForces = p5.Vector.mult(combinedForces, deltaTime / 1000);
+            let combinedForces = Two.Vector.add(plane.gravityForce, Two.Vector.add(plane.liftForce, plane.dragForce));
+            let frameForces = combinedForces.multiply(fakeFrameDelta / 1000);
             plane.velocity.add(frameForces);
 
-            plane.position.add(p5.Vector.mult(plane.velocity, deltaTime / 1000));
-            plane.rotation = plane.velocity.heading();
+            plane.position.add(plane.velocity.clone().multiply(fakeFrameDelta / 1000));
+            plane.rotation = Two.Vector.angleBetween(plane.velocity, Two.Vector.right);
 
-            timeSincePoint += deltaTime / 1000;
-            if (timeSincePoint >= pointFrequency) {
-                timeSincePoint = timeSincePoint % pointFrequency;
-                plane.trail.points.push(plane.position.copy());
-            }
+            plane.shape.position.x = plane.position.x;
+            plane.shape.position.y = plane.position.y;
+            plane.shape.rotation = plane.rotation + Math.PI / 2;
 
-            while (plane.position.x < 0) {
-                plane.position.x += windowWidth;
-                plane.trail = createLine();
-            }
-            if (plane.position.x >= windowWidth) {
-                plane.position.x = plane.position.x % windowWidth;
-                plane.trail = createLine();
-            }
-            while (plane.position.y < 0) {
-                plane.position.y += windowHeight;
-                plane.trail = createLine();
-            }
-            if (plane.position.y >= windowHeight) {
-                plane.position.y = plane.position.y % windowHeight;
-                plane.trail = createLine();
+
+            if (plane.position.x < 0 || plane.position.x >= two.width || plane.position.y < 0 || plane.position.y >= two.height) {
+                plane.position.x = ((plane.position.x % two.width) + two.width) % two.width;
+                plane.position.y = ((plane.position.y % two.height) + two.height) % two.height;
+                plane.teleported = true;
             }
         }
     }
-    entities.push(plane);
     return plane;
 }
 
 
-function createLine() {
+function createLine(parent) {
+
+    function createShape() {
+        let shape = two.makeCurve([new Two.Anchor(parent.position.x, parent.position.y), new Two.Anchor(parent.position.x, parent.position.y)], true);
+        shape.vertices[0].x = shape.position.x;
+        shape.vertices[0].y = shape.position.y;
+        shape.vertices[1].x = shape.position.x;
+        shape.vertices[1].y = shape.position.y;
+        shape.position.x = 0;
+        shape.position.y = 0;
+        shape.stroke = 'rgb(35, 32, 33, 1)';
+        shape.dashes = [10, 50];
+        shape.linewidth = 3;
+        shape.noFill();
+        shape.cap = 'rounded';
+        shape.position = Two.Vector.zero;
+        background.add(shape);
+        return shape;
+    }
+
     let line = {
         timestamp: elapsedTime,
         alpha: 1,
-        points: [],
-        isDead: false,
         zIndex: 5,
+        shape: createShape(),
+        parent: parent,
+        previousShapes: [],
         update: (line) => {
-            let timeAlive = elapsedTime - line.timestamp;
-            line.alpha = constrain(map(timeAlive, 0, 60, 255, 0), 0, 255);
-            if (line.alpha <= 0) {
-                line.isDead = true;
+            if (line.parent.teleported) {
+                line.previousShapes.unshift(line.shape);
+                line.shape = createShape();
             }
-        },
-        draw: (line) => {
-            push();
-            drawingContext.setLineDash([10, 50]);
-            stroke(38, 38, 35, line.alpha);
-            strokeWeight(3);
-            noFill();
 
-            beginShape();
+            let lastPoint = line.shape.vertices[line.shape.vertices.length - 1];
+            lastPoint.x = parent.position.x;
+            lastPoint.y = parent.position.y;
 
-            line.points.forEach((point) => {
-                vertex(point.x, point.y);
+            let prevPoint = line.shape.vertices[line.shape.vertices.length - 2];
+            if (prevPoint.distanceTo(lastPoint) > 25) {
+                line.shape.vertices.splice(line.shape.vertices.length - 1, 0, makePoint(parent.position));
+            }
+
+            line.previousShapes.forEach((shape, index) => {
+                let opacity = (10 - index) / 10;
+                shape.stroke = `rgba(35, 32, 33, ${opacity})`;
             });
 
-            endShape();
-            pop();
+            if (line.previousShapes.length == 15) {
+                var shape = line.previousShapes.pop();
+                shape.remove();
+            }
         }
     }
-    entities.push(line);
     return line;
 }
+
+
+function makePoint(x, y) {
+
+    if (arguments.length <= 1) {
+        y = x.y;
+        x = x.x;
+    }
+
+    var v = new Two.Anchor(x, y);
+    v.position = new Two.Vector().copy(v);
+
+    return v;
+
+}
+
+
+setup();

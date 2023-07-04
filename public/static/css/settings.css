@@ -1,0 +1,62 @@
+.settings {
+    position: fixed;
+    bottom: 2rem;
+    right: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+.settings:not(.is-open) .settings-btn:not(.open-settings-btn) {
+    opacity: 0;
+    margin-bottom: -3rem;
+    z-index: -1;
+}
+
+.settings-btn {
+    cursor: pointer;
+    display: flex;
+    transition: all 0.3s ease-out;
+    opacity: 1;
+}
+
+.settings-btn .button-label {
+    margin-right: 1rem;
+    opacity: 0;
+    transition: all 0.1s ease-out;
+}
+
+.settings-btn svg {
+    transition: all 0.3s ease-out;
+}
+
+.settings-btn svg path {
+    fill: var(--main-color);
+    transition: all 0.3s ease-out;
+}
+
+.settings-btn:hover .button-label,
+.is-open .button-label {
+    opacity: 1;
+}
+
+.is-open>.open-settings-btn svg {
+    transform: rotate(180deg);
+}
+
+.is-open>.open-settings-btn svg path,
+.settings-btn:hover svg path {
+    fill: var(--accent-color);
+}
+
+.settings-btn+.settings-btn {
+    margin-top: 1rem;
+}
+
+.toggle-animations-btn.is-playing .when-paused {
+    display: none;
+}
+
+.toggle-animations-btn:not(.is-playing) .when-playing {
+    display: none;
+}

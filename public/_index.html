@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Martin Candela Calabuig portfolio">
+    <meta name="keywords"
+        content="Backend Developer, Full Stack Developer, Fullstack, Tech Lead, Technical Lead, Solutions Architech, Contract, Full Time, London, Madrid, Python, Google Cloud, Flask, FastAPI, Google Appengine, BigQuery, Apache Beam, Google Dataflow, GCP, HTML, CSS, JavaScript, VanillaJS, Bash, Google AppScript, Google Firebase, Linux, PHP, PostgreSQL, Python 2, Python 3, webapp2">
+    <meta name="author" content="Martin Candela Calabuig">
+    <title>Martin Candela</title>
+
+
+    <link rel="stylesheet" href="/static/css/index.css" type="text/css">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/static/site.webmanifest">
+</head>
+
+<body>
+
+    <main>
+        <header id="header">
+            <h1>
+                <span class="colorize-on-hover">Hi!</span>
+                <span class="colorize-on-hover">My</span>
+                <span class="colorize-on-hover">name</span>
+                <span class="colorize-on-hover">is</span>
+                <span class="underline-on-hover colorize">Martin Candela</span>
+                <span class="colorize-on-hover">and</span>
+                <span class="colorize-on-hover">I'm</span>
+                <span class="colorize-on-hover">a</span>
+                <span class="underline-on-hover colorize">Backend Developer</span>
+            </h1>
+            <p>
+                I live in <strong>Madrid, Spain</strong>, with my wife and our one year old son. I'm always reachable at
+                <strong>martincandelac@gmail.com</strong> if there's anything you'd like to talk about.
+            </p>
+        </header>
+
+        <menu class="settings">
+            <div class="settings-btn toggle-animations-btn" onclick="settings.toggleAnimations()">
+                <span class="button-label when-playing">Pause animations</span>
+                <span class="button-label when-paused">Play animations</span>
+                <svg class="when-playing" xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960"
+                    width="30">
+                    <path
+                        d="M623.333-200q-27.5 0-47.083-19.583t-19.583-47.083v-426.668q0-27.5 19.583-47.083T623.333-760h36.668q27.499 0 47.083 19.583 19.583 19.583 19.583 47.083v426.668q0 27.5-19.583 47.083Q687.5-200 660.001-200h-36.668Zm-323.334 0q-27.499 0-47.083-19.583-19.583-19.583-19.583-47.083v-426.668q0-27.5 19.583-47.083Q272.5-760 299.999-760h36.668q27.5 0 47.083 19.583t19.583 47.083v426.668q0 27.5-19.583 47.083T336.667-200h-36.668Z" />
+                </svg>
+                <svg class="when-paused" xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960"
+                    width="30">
+                    <path
+                        d="M371-234.333q-16.667 11-33.833 1.166Q320-243 320-263v-438q0-20 17.167-29.834 17.166-9.833 33.833 1.167L715.667-510Q731-500 731-482t-15.333 28L371-234.333Z" />
+                </svg>
+            </div>
+
+            <div class="settings-btn open-settings-btn" onclick="settings.toggleMenu()" title="Open settings">
+                <span class="button-label">Open settings</span>
+                <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30">
+                    <path
+                        d="M549-80H411q-12.333 0-21.666-8Q380-96 378-108.333l-14.666-98.334Q346.333-213 328.5-223.333 310.666-233.667 296.333-245l-91 40.667q-12 5-24 1.333t-18.667-15.333L94-339.333q-6.667-11-3.667-23.333 3-12.334 13-20l82.334-61q-1.667-8.334-2-18.167-.334-9.834-.334-18.167 0-8.333.334-18.167.333-9.833 2-18.167l-82.334-61q-10-7.666-13-20-3-12.333 3.667-23.333l68.666-121q6.334-12 18.5-15.5 12.167-3.5 24.167 1.5l91 40.667q14.333-11.333 32.334-21.667 18-10.333 34.667-16l14.666-99Q380-864 389.334-872q9.333-8 21.666-8h138q12.333 0 21.666 8Q580-864 582-851.667l14.666 98.334Q613.667-747 631.833-737q18.167 10 31.834 22l91-40.667q12-5 24-1.333t18.667 15.333L866-621.333q6.667 10.999 4 23.666t-13.333 20.333l-82.334 59.667q1.667 9 2 18.834.334 9.833.334 18.833 0 9-.334 18.5Q776-452 774-443l82.333 60.334q10 7.666 13 20 3 12.333-3.666 23.333L797-218.667q-6.666 11.667-18.833 15.5Q766-199.333 754-204.333L663.667-245q-14.333 11.333-32 22t-35.001 16.333L582-108.333Q580-96 570.666-88q-9.333 8-21.666 8Zm-68.333-266.667q55.333 0 94.333-39T614-480q0-55.333-39-94.333t-94.333-39q-55.667 0-94.5 39-38.834 39-38.834 94.333t38.834 94.333q38.833 39 94.5 39Z" />
+                </svg>
+            </div>
+        </menu>
+
+        <script src="/static/js/index.js"></script>
+</body>
+
+</html>
