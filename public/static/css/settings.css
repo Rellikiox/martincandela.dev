@@ -15,7 +15,8 @@
 
 .settings-btn {
     cursor: pointer;
-    display: flex;
+    display: none;
+    /* display: flex; */
     transition: all 0.3s ease-out;
     opacity: 1;
 }
